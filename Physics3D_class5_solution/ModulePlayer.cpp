@@ -27,8 +27,8 @@ bool ModulePlayer::Start()
 	car.front_size.Set(0.5, 4, 0.25);
 	car.front_offset.Set(0.5, 2.25, 1.60);
 
-	car.pale_size.Set(0.5, 0.1, 3);
-	car.pale_offset.Set(0.5, 1, 1.60);
+	car.pale_size.Set(0.5, 0.1, 4);
+	car.pale_offset.Set(0.5, 0.4, 1.60);
 
 	car.mass = 500.0f;
 	car.suspensionStiffness = 15.88f;
@@ -120,6 +120,7 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update(float dt)
 {
+
 	turn = acceleration = brake = 0.0f;
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -149,6 +150,12 @@ update_status ModulePlayer::Update(float dt)
 	vehicle->Brake(brake);
 
 	vehicle->Render();
+	vec3 pos = vehicle->GetPos();
+	vec3 fwv = vehicle->GetForwardVector();
+	App->camera->Position.Set(pos.x - fwv.x, pos.y - fwv.y, pos.z - fwv.z);
+	App->camera->LookAt(vehicle->GetForwardVector());
+	
+	
 
 	char title[80];
 	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
